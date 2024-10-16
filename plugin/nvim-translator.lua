@@ -23,8 +23,10 @@ if (nvim_local_v ~= nil) and (vim.version.lt(nvim_local_v, nvim_support_v)) then
     )
 end
 
+require('nvim-translator').init()
+
 -- init
-require('nvim-translator').setup()
+-- require('nvim-translator').setup()
 
 -- Ex commands
 -- TODO create user command
