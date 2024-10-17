@@ -1,15 +1,28 @@
 local M = {}
 
+--- Define translate api specification{{{
+--- The URL of translate api.
+---@type string
 local URL_TRANSLATOR =
 "https://script.google.com/macros/s/AKfycbwazxusB41dZgqxLMuQ1mn6177dGGISodFDv4-yaeKuTr45BaDXqOAupIiceJyBCEs/exec"
 
----{{{ create reqest paramater
+--- Request paramaters of translate api.
+---@class RequestParamKey
+local REQUEST_PARAM_KEY = {
+    src = "source",
+    dst = "target",
+    txt = "text"
+}
+-- }}}
+---
+--- Create reqest paramater to hit the translate API{{{
+---@type fun(text: string, src: LANG, dst: LANG): string?
 local create_req_params = function(text, src, dst)
     -- source text must be less than 3000 characters
     local strlen_max = 3000
     if string.len(text) > strlen_max then
         vim.notify("the text must be less than 3,000 characters", vim.log.levels.WARN)
-        return ""
+        return nil
     end
 
     -- format text used in request parameter
@@ -39,18 +52,23 @@ local create_req_params = function(text, src, dst)
         req_text = string.gsub(req_text, forbidden_chars[i], url_encodes[i])
     end
     -- create reqest paramater
-    local req_params = "?text=" .. req_text .. "&source=" .. src .. "&target=" .. dst
+    local req_params = ""
+    req_params = req_params .. "?" .. REQUEST_PARAM_KEY.txt .. "=" .. req_text
+    req_params = req_params .. "&" .. REQUEST_PARAM_KEY.src .. "=" .. src
+    req_params = req_params .. "&" .. REQUEST_PARAM_KEY.dst .. "=" .. dst
+
     return req_params
 end
 -- }}}
 --
--- hit the translation API{{{
-local hit_translation_api = function(src, dst, text)
+-- Hit the translation API{{{
+---@type fun(text: string, src: LANG, dst: LANG): string?
+local hit_translation_api = function(text, src, dst)
     if vim.fn.executable('curl') ~= 1 then
         vim.notify("curl is required to translation", vim.log.levels.ERROR)
         return nil
     end
-    -- assemble cmd to hit the api
+    -- assemble cmd to hit the API
     local req_url = URL_TRANSLATOR                       -- http://<translation api url>
     local req_params = create_req_params(text, src, dst) -- ?text=.....&source=..&target=..
     if req_params == "" then
@@ -67,25 +85,27 @@ local hit_translation_api = function(src, dst, text)
     end
     local cmd = cmd_curl .. ' ' .. cmd_rm_stderr
 
-    -- hit the translation api and read translate result(stdout)
+    -- Hit the translation api and read translate result(stdout)
     local handle = io.popen(cmd)
-    if handle == nil then return end
+    if handle == nil then
+        vim.notify("failed to open proccess handler", vim.log.levels.ERROR)
+        return nil
+    end
     local res = handle:read('*a')
     handle:close()
 
     if res == nil then
         vim.notify("failed to translate text", vim.log.levels.ERROR)
         return nil
-    else
-        return res
     end
+    return res
 end
 -- }}}
 --
 -- translate text{{{
----@type fun(src: LANG, dst: LANG, text: string): string?
-M.translate = function(src, dst, text)
-    local translated_text = hit_translation_api(src, dst, text)
+---@type fun(text: string, src: LANG, dst: LANG): string?
+M.translate = function(text, src, dst)
+    local translated_text = hit_translation_api(text, src, dst)
     if translated_text == nil then
         -- if response was empty, print error
         vim.notify("failed to translate text.", vim.log.levels.ERROR)
