@@ -23,7 +23,27 @@ if (nvim_local_v ~= nil) and (vim.version.lt(nvim_local_v, nvim_support_v)) then
     )
 end
 
-require('nvim-translator').init()
+---initialize nvim-translator on default config
+---@type NTConfig
+local default_config = {
+    keymap = {
+        {
+            src = "en",
+            dst = "ja",
+            key = "<Leader>?",
+        },
+        {
+            src = "en",
+            dst = "ja",
+            key = "<Leader>g?",
+        }
+    },
+    ui = {
+        border = 1
+    },
+}
+
+require('nvim-translator').setup(default_config)
 
 -- init
 -- require('nvim-translator').setup()
