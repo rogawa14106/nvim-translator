@@ -1,7 +1,6 @@
 local M = {}
 
 -- import modules
-local translator = require('nvim-translator.translator')
 local ui = require('nvim-translator.ui')
 
 ---define nvim-translator configuration type
@@ -14,13 +13,13 @@ local ui = require('nvim-translator.ui')
 local default_config = {
     keymap = {
         {
-            src = translator.lang.EN,
-            dst = translator.lang.JP,
+            src = "en",
+            dst = "ja",
             key = "<Leader>?",
         },
         {
-            src = translator.lang.JP,
-            dst = translator.lang.EN,
+            src = "en",
+            dst = "ja",
             key = "<Leader>g?",
         }
     },
@@ -34,6 +33,10 @@ local default_config = {
 ---@field src LANG
 ---@field dst LANG
 ---@field key string
+
+---@alias LANG @string literal to specify translate language
+---| "ja" japanese
+---| "en" english
 
 -- define nvim-translator ui configuration type
 ---@class NTUIConfig
