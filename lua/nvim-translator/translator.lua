@@ -1,26 +1,64 @@
 local M = {}
+local async = require('lib.async')
 
---- Define translate api specification{{{
+--- Define specification of translate API{{{
 --- The URL of translate api.
 ---@type string
-local URL_TRANSLATOR =
+M.URL_TRANSLATOR =
 "https://script.google.com/macros/s/AKfycbwazxusB41dZgqxLMuQ1mn6177dGGISodFDv4-yaeKuTr45BaDXqOAupIiceJyBCEs/exec"
 
 --- Request paramaters of translate api.
 ---@class RequestParamKey
-local REQUEST_PARAM_KEY = {
+---@field src string
+---@field dst string
+---@field txt string
+M.REQUEST_PARAM_KEY = {
     src = "source",
     dst = "target",
     txt = "text"
 }
+
+---maximum translatable text length 
+---@type integer
+M.TEXT_LEN_LIMIT = 3000
 -- }}}
----
+
+-- text loader {{{
+-- load text selected on visual mode
+---@type fun(): string
+local load_visual_text = function()
+    local zreg_bf = vim.fn.getreg("z")
+    vim.cmd('noautocmd normal! "zy')
+    local zreg_af = vim.fn.getreg("z")
+    vim.fn.setreg("z", zreg_bf)
+    return zreg_af
+end
+
+-- load text under cursor
+---@type fun(): string
+local load_cursor_text = function()
+    local zreg_bf = vim.fn.getreg("z")
+    vim.cmd('noautocmd normal! viw"zy')
+    local zreg_af = vim.fn.getreg("z")
+    vim.fn.setreg("z", zreg_bf)
+    return zreg_af
+end
+
+local text_loader = {
+    visual = load_visual_text,
+    cursor = load_cursor_text
+}
+M.load_text = function(type)
+    local text = text_loader[type]()
+    return text
+end
+-- }}}
+
 --- Create reqest paramater to hit the translate API{{{
 ---@type fun(text: string, src: LANG, dst: LANG): string?
 local create_req_params = function(text, src, dst)
     -- source text must be less than 3000 characters
-    local strlen_max = 3000
-    if string.len(text) > strlen_max then
+    if string.len(text) > M.TEXT_LEN_LIMIT then
         vim.notify("the text must be less than 3,000 characters", vim.log.levels.WARN)
         return nil
     end
@@ -53,66 +91,32 @@ local create_req_params = function(text, src, dst)
     end
     -- create reqest paramater
     local req_params = ""
-    req_params = req_params .. "?" .. REQUEST_PARAM_KEY.txt .. "=" .. req_text
-    req_params = req_params .. "&" .. REQUEST_PARAM_KEY.src .. "=" .. src
-    req_params = req_params .. "&" .. REQUEST_PARAM_KEY.dst .. "=" .. dst
+    req_params = req_params .. "?" .. M.REQUEST_PARAM_KEY.txt .. "=" .. req_text
+    req_params = req_params .. "&" .. M.REQUEST_PARAM_KEY.src .. "=" .. src
+    req_params = req_params .. "&" .. M.REQUEST_PARAM_KEY.dst .. "=" .. dst
 
     return req_params
 end
 -- }}}
---
--- Hit the translation API{{{
----@type fun(text: string, src: LANG, dst: LANG): string?
-local hit_translation_api = function(text, src, dst)
-    if vim.fn.executable('curl') ~= 1 then
-        vim.notify("curl is required to translation", vim.log.levels.ERROR)
-        return nil
-    end
-    -- assemble cmd to hit the API
-    local req_url = URL_TRANSLATOR                       -- http://<translation api url>
-    local req_params = create_req_params(text, src, dst) -- ?text=.....&source=..&target=..
-    if req_params == "" then
-        vim.notify("failed to build reqest paramater to hit the tralslate api", vim.log.levels.ERROR)
-        return nil
-    end
-    local req = '"' .. req_url .. req_params .. '"'
-    local cmd_curl = 'curl -L ' .. req
-    local cmd_rm_stderr = ''
-    if vim.fn.has('win32') == 1 then
-        cmd_rm_stderr = '2> nul'
-    else
-        cmd_rm_stderr = '2> /dev/null'
-    end
-    local cmd = cmd_curl .. ' ' .. cmd_rm_stderr
 
-    -- Hit the translation api and read translate result(stdout)
-    local handle = io.popen(cmd)
-    if handle == nil then
-        vim.notify("failed to open proccess handler", vim.log.levels.ERROR)
-        return nil
-    end
-    local res = handle:read('*a')
-    handle:close()
-
-    if res == nil then
-        vim.notify("failed to translate text", vim.log.levels.ERROR)
-        return nil
-    end
-    return res
-end
--- }}}
---
--- translate text{{{
----@type fun(text: string, src: LANG, dst: LANG): string?
+-- sumple
 M.translate = function(text, src, dst)
-    local translated_text = hit_translation_api(text, src, dst)
-    if translated_text == nil then
-        -- if response was empty, print error
-        vim.notify("failed to translate text.", vim.log.levels.ERROR)
-        return nil
+    local cmd = "curl"
+    local url = M.URL_TRANSLATOR .. create_req_params(text, src, dst)
+    local cmd_args = {
+        "-L",
+        url
+    }
+    local on_exit = function(data)
+        print(data)
+        --timer.close()
     end
-    return translated_text
+    local on_err = function(data)
+        --timer.close()
+        return
+    end
+
+    async.execute_cmd_async(cmd, cmd_args, on_exit, on_err)
 end
--- }}}
 
 return M
