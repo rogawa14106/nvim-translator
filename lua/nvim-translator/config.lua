@@ -38,9 +38,9 @@ local default_config = {
             key = "<Leader>g?",
         }
     },
-    ui = {
-        border = ui.border_type.SOLID
-    },
+    -- ui = {
+        -- border = ui.border_type.SOLID
+    -- },
 }
 
 ---@type fun(user_config: NTConfig): boolean

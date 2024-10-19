@@ -3,9 +3,9 @@
 ---@field name string
 ---@field window FWinWindowConfig
 ---@field options FwinOptionConfig
----@field keymaps FwinKeymapConfig
----@field autocmd FwinAutocmdConfig
-
+---@field keymaps FwinKeymapConfig[]
+---@field autocmd FwinAutocmdConfig[]
+---@field initial_lines string[]? initial text lines
 ---window config
 ---@alias FWinWindowConfig vim.api.keyset.win_config
 ---
@@ -85,7 +85,7 @@ local new = function()
     }
 
     ---@type fun(config: FWinConfig):nil
-    self.new = function(config)
+    self.init = function(config)
         -- self.config_init = config
         self.config = config
 
@@ -93,7 +93,9 @@ local new = function()
 
         self.create_buf()
         self.open_win()
-        self.write_lines(0, -1, self.config.initial_lines)
+        if self.config.initial_lines then
+            self.write_lines(0, -1, self.config.initial_lines)
+        end
         _self.set_bufopt()
         _self.set_winopt()
         _self.set_keymap()
@@ -171,19 +173,19 @@ local new = function()
         -- TODO too nested
         for i = 1, #keymap_table do
             local keymap = keymap_table[i]
-            local require_opts = { "is_buf", "mode", "lhs", "rhs" }
-            if _self.validate_table(keymap, require_opts) == false then
-                vim.notify("invalid keymap options. require following keys" .. vim.inspect(require_opts),
-                    vim.log.levels.ERROR)
-                goto continue
-            end
+            -- local require_opts = { "is_buf", "mode", "lhs", "rhs" }
+            -- if _self.validate_table(keymap, require_opts) == false then
+            -- vim.notify("invalid keymap options. require following keys" .. vim.inspect(require_opts),
+            -- vim.log.levels.ERROR)
+            -- goto continue
+            -- end
 
             if keymap.is_buf == true then
                 vim.api.nvim_buf_set_keymap(self.bufnr, keymap.mode, keymap.lhs, keymap.rhs, keymap.opts)
             else
                 vim.api.nvim_set_keymap(keymap.mode, keymap.lhs, keymap.rhs, keymap.opts)
             end
-            ::continue::
+            -- ::continue::
         end
     end
 
@@ -203,12 +205,12 @@ local new = function()
         -- create autocmd
         for i = 1, #autocmd_table do
             local autocmd = autocmd_table[i]
-            local require_opts = { "is_buf", "event", "opts" }
-            if _self.validate_table(autocmd, require_opts) == false then
-                vim.notify("invalid autocmd options. require following keys" .. vim.inspect(require_opts),
-                    vim.log.levels.ERROR)
-                goto continue
-            end
+            -- local require_opts = { "is_buf", "event", "opts" }
+            -- if _self.validate_table(autocmd, require_opts) == false then
+            -- vim.notify("invalid autocmd options. require following keys" .. vim.inspect(require_opts),
+            -- vim.log.levels.ERROR)
+            -- goto continue
+            -- end
 
             -- add group to autocmd option
             autocmd.opts.group = self.config.name
@@ -219,7 +221,7 @@ local new = function()
             else
                 vim.api.nvim_create_autocmd(autocmd.event, autocmd.opts)
             end
-            ::continue::
+            -- ::continue::
         end
     end
 
@@ -235,14 +237,14 @@ local new = function()
 
         for i = 1, #bufopt_table do
             local bufopt = bufopt_table[i]
-            local require_opts = { "name", "value" }
-            if _self.validate_table(bufopt, require_opts) == false then
-                vim.notify("invalid buffer options. require following keys" .. vim.inspect(require_opts),
-                    vim.log.levels.ERROR)
-                goto continue
-            end
+            -- local require_opts = { "name", "value" }
+            -- if _self.validate_table(bufopt, require_opts) == false then
+            -- vim.notify("invalid buffer options. require following keys" .. vim.inspect(require_opts),
+            -- vim.log.levels.ERROR)
+            -- goto continue
+            -- end
             vim.api.nvim_set_option_value(bufopt.name, bufopt.value, { buf = self.bufnr })
-            ::continue::
+            -- ::continue::
         end
     end
 
@@ -258,14 +260,14 @@ local new = function()
 
         for i = 1, #winopt_table do
             local winopt = winopt_table[i]
-            local require_opts = { "name", "value" }
-            if _self.validate_table(winopt, require_opts) == false then
-                vim.notify("invalid window options. require following keys" .. vim.inspect(require_opts),
-                    vim.log.levels.ERROR)
-                goto continue
-            end
+            -- local require_opts = { "name", "value" }
+            -- if _self.validate_table(winopt, require_opts) == false then
+            -- vim.notify("invalid window options. require following keys" .. vim.inspect(require_opts),
+            -- vim.log.levels.ERROR)
+            -- goto continue
+            -- end
             vim.api.nvim_set_option_value(winopt.name, winopt.value, { win = self.winid })
-            ::continue::
+            -- ::continue::
         end
     end
 
@@ -280,12 +282,12 @@ local new = function()
         --         vim.api.nvim_set_hl_ns()
         for i = 1, #hlopt_table do
             local hlopt = hlopt_table[i]
-            local require_opts = { "name", "val" }
-            if _self.validate_table(hlopt, require_opts) == false then
-                vim.notify("invalid highlight options. require following keys" .. vim.inspect(require_opts),
-                    vim.log.levels.ERROR)
-                goto continue
-            end
+            -- local require_opts = { "name", "value" }
+            -- if _self.validate_table(hlopt, require_opts) == false then
+                -- vim.notify("invalid highlight options. require following keys" .. vim.inspect(require_opts),
+                    -- vim.log.levels.ERROR)
+                -- goto continue
+            -- end
             vim.api.nvim_set_hl(ns_id, hlopt.name, hlopt.value)
             ::continue::
         end

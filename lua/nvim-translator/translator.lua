@@ -44,19 +44,23 @@ local load_cursor_text = function()
     return zreg_af
 end
 
-local text_loader = {
+local text_loaders = {
     visual = load_visual_text,
     cursor = load_cursor_text
 }
+---@param type "visual"|"cursor"
+---@return string
 M.load_text = function(type)
-    local text = text_loader[type]()
+    local text_loader = text_loaders[type]
+    local text = text_loader()
+    print(text)
     return text
 end
 -- }}}
 
 --- Create reqest paramater to hit the translate API{{{
 ---@type fun(text: string, src: LANG, dst: LANG): string?
-local create_req_params = function(text, src, dst)
+M.create_req_params = function(text, src, dst)
     -- source text must be less than 3000 characters
     if string.len(text) > M.TEXT_LEN_LIMIT then
         vim.notify("the text must be less than 3,000 characters", vim.log.levels.WARN)
@@ -102,7 +106,7 @@ end
 -- sumple
 M.translate = function(text, src, dst)
     local cmd = "curl"
-    local url = M.URL_TRANSLATOR .. create_req_params(text, src, dst)
+    local url = M.URL_TRANSLATOR .. M.create_req_params(text, src, dst)
     local cmd_args = {
         "-L",
         url

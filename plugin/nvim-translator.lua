@@ -18,19 +18,23 @@ local nvim_support_v = { 0, 10, 0 }
 if (nvim_local_v ~= nil) and (vim.version.lt(nvim_local_v, nvim_support_v)) then
     vim.notify(
         "this plugin only support nvim version => "
-        .. nvim_support_v[1] .. nvim_support_v[2] .. nvim_support_v[3],
+        .. nvim_support_v[1] .. nvim_support_v[2] .. nvim_support_v[3]
+        .. "I won't know it works unless you try it",
         vim.log.levels.ERROR
     )
 end
 
----initialize nvim-translator on default config
+-- on dev env
+vim.cmd("set runtimepath+=~/work/01_dev/nvim_plugin/nvim-translator")
+
+---initialize nvim-translator on qrsnhyg config
 ---@type NTConfig
 local default_config = {
     keymap = {
         {
             src = "en",
             dst = "ja",
-            key = "<Leader>?",
+            key = "<Leader><Leader>",
         },
         {
             src = "en",
@@ -38,29 +42,9 @@ local default_config = {
             key = "<Leader>g?",
         }
     },
-    ui = {
-        border = 1
-    },
+    -- ui = {
+        -- border = 1
+    -- },
 }
 
-require('nvim-translator').setup(default_config)
-
--- init
--- require('nvim-translator').setup()
-
--- Ex commands
--- TODO create user command
--- vim.api.nvim_create_user_command(
-    -- "Translate",
-    -- function()
-    -- end,
-    -- { bang = true }
--- )
-
--- default keymap TODO
--- TODO create keymap
--- vim.api.nvim_set_keymap("n", "<Leader>?", "", {
-    -- callback = function ()
-    -- end,
--- })
-
+require("nvim-translator").setup(default_config)
