@@ -34,11 +34,11 @@ local default_config = {
         {
             src = "en",
             dst = "ja",
-            key = "<Leader><Leader>",
+            key = "<Leader>?",
         },
         {
-            src = "en",
-            dst = "ja",
+            src = "ja",
+            dst = "en",
             key = "<Leader>g?",
         }
     },
