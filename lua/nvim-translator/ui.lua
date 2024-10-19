@@ -3,26 +3,27 @@ local FloatWindow = require('lib.float_window')
 local M = {}
 
 ---@type FloatWindow
-local float_window = FloatWindow()
+local float_window = FloatWindow.new()
 
 ---@type fun():nil
 function M.new()
     -- floatwindow configuration
     local config_win = {
         focusable = true,
-        --         focusable = false,
-        width     = 10,
-        height    = 1,
+        width     = 100,
+        height    = 10,
         --         col       = vim.opt.columns:get() - width - border_off - offset,
         --         row       = vim.opt.lines:get() - height - border_off - offset - 1,
         col       = 1,
         row       = 1,
-        border    = 'solid',
-        --         title     = "vim translation ",
+        border    = {
+            "╭", "─", "╮", "│",
+            "╯", "─", "╰", "│"
+        },
         style     = 'minimal',
         relative  = "cursor",
         anchor    = "NW",
-        --         relative  = "editor",
+        title     = " nvim-translator ",
     }
     local config_keymaps = {
         {
@@ -72,26 +73,30 @@ function M.new()
                 name = "NormalFloat",
                 value = {
                     fg = "#fefefe",
-                    bg = "#382c2c",
+                    bg = "#343934",
                 }
             },
             {
                 name = "FloatBorder",
                 value = {
                     fg = "#fefefe",
-                    bg = "#382c2c",
+                    bg = "none",
                 }
             },
         },
     }
+
+    ---@type FWinConfig
     local config = {
-        id = "nvim-translator",
+        name = "nvim-translator",
         window = config_win,
         keymaps = config_keymaps,
-        option = options
+        options = options,
+        autocmd = {}
     }
 
-    float_window.new(config)
+    float_window.init(config)
+    print("ui:new:bufnr:", float_window.bufnr)
 end
 
 ---@type fun(lines: string[]):nil
@@ -105,8 +110,26 @@ end
 function M.resize(row, col, width, height)
 end
 
----@type fun(spinner: string[])
-function M.draw_spinner(spinner)
+---@param spin_chars string[]
+---@param spin_interval integer * 100msec
+---@return uv_timer_t
+function M.draw_spinner(spin_chars, spin_interval)
+    local spin_cnt = 0
+    local spinner
+    local spinner_start = function(_spin_interval)
+        local uv = vim.loop
+        spinner = uv.new_timer()
+        local cb = vim.schedule_wrap(function()
+            if #vim.fn.win_findbuf(float_window.bufnr) < 1 then
+                spinner:close()
+            end
+            M.overwrite_lines({ spin_chars[spin_cnt % #spin_chars + 1] })
+            spin_cnt = spin_cnt + 1
+        end)
+        uv.timer_start(spinner, 0, _spin_interval * 100, cb)
+    end
+    spinner_start(spin_interval)
+    return spinner
 end
 
 return M

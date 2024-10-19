@@ -3,10 +3,25 @@ local M = {}
 -- import modules
 local ui = require('nvim-translator.ui')
 
----define nvim-translator configuration type
+---nvim-translator configuration type
 ---@class NTConfig
 ---@field keymap NTKeymapConfig[]
----@field ui NTUIConfig
+--@field ui NTUIConfig
+
+-- keymap configuration type
+---@class NTKeymapConfig
+---@field src LANG
+---@field dst LANG
+---@field key string
+
+-- define nvim-translator ui configuration type
+--@class NTUIConfig
+--@field border BORDER_TYPE
+
+---@alias LANG @string literal to specify translate language
+---| "ja" japanese
+---| "en" english
+
 
 ---default configuration of nvim-translator
 ---@type NTConfig
@@ -23,24 +38,10 @@ local default_config = {
             key = "<Leader>g?",
         }
     },
-    ui = {
-        border = ui.border_type.SOLID
-    },
+    -- ui = {
+        -- border = ui.border_type.SOLID
+    -- },
 }
-
--- define nvim-translator keymap configuration type
----@class NTKeymapConfig
----@field src LANG
----@field dst LANG
----@field key string
-
----@alias LANG @string literal to specify translate language
----| "ja" japanese
----| "en" english
-
--- define nvim-translator ui configuration type
----@class NTUIConfig
----@field border BORDER_TYPE
 
 ---@type fun(user_config: NTConfig): boolean
 local validate_config = function(user_config)
@@ -64,9 +65,9 @@ function M.build_config(user_config)
     if user_config.keymap ~= nil then
         config.keymap = user_config.keymap
     end
-    if user_config.ui ~= nil then
-        config.ui = user_config.ui
-    end
+    -- if user_config.ui ~= nil then
+        -- config.ui = user_config.ui
+    -- end
     return config
 end
 
