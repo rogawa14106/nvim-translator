@@ -1,9 +1,9 @@
-
 local M = {}
 
+local main = require('nvim-translator.main')
 vim.api.nvim_set_keymap("n", "<Leader>?", "", {
     callback = function()
-        -- call translate function
+        main()
     end,
 })
 

@@ -42,7 +42,7 @@
 ---@field config FWinConfig
 ---@field bufnr integer
 ---@field winid integer
----@field new fun(config: FWinConfig): nil
+---@field init fun(config: FWinConfig): nil
 ---@field create_buf fun(): integer
 ---@field open_win fun(): integer?
 ---@field change_opt fun():nil implement not yet
@@ -51,17 +51,17 @@
 ---@field send_cmd fun():nil
 
 ---@type fun(): FloatWindow
-local FloatWindow = function()
+local new = function()
     -- FloatWindow member variables
     local self = {
         config = {},
         bufnr = nil,
         winid = nil, -- 'winid' can be derived from 'bufnr', but retain 'winid' in variable because processing steps is reduced.
-        --         pre_winid = nil,
+        --         pre_winid = nil, TODO add implement to back most recent winid when change window
         --         buflines = {},
         --         bufinfos = {},
         -- member methods
-        new = function() end,
+        init = function() end,
         create_buf = function() end,
         open_win = function() end,
         change_opt = function() end,
@@ -306,5 +306,5 @@ local FloatWindow = function()
 end
 
 return {
-    FloatWindow = FloatWindow,
+    new = new,
 }

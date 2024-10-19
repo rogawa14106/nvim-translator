@@ -3,7 +3,7 @@ local FloatWindow = require('lib.float_window')
 local M = {}
 
 ---@type FloatWindow
-local float_window = FloatWindow()
+local float_window = FloatWindow.new()
 
 ---@type fun():nil
 function M.new()
@@ -91,7 +91,7 @@ function M.new()
         option = options
     }
 
-    float_window.new(config)
+    float_window.init(config)
 end
 
 ---@type fun(lines: string[]):nil
