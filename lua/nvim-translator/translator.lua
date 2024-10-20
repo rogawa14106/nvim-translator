@@ -219,32 +219,11 @@ M.create_req_params = function(text, src, dst)
         return nil
     end
 
-    -- format text used in request parameter
+    -- remove line breaks
+    text = text:gsub("\r?\n", " ")
+
+    -- Perform URL encoding
     local req_text = url_encode(text)
-    -- substitute characters that can't use in url
-    -- local forbidden_chars = {
-        -- "%s+", "!", '"', "#", "%$",
-        -- -- "%",
-        -- "&", "'", "%(", "%)", "*",
-        -- "+", ",", "/", ":", ";",
-        -- "<", "=", ">", "?", "@",
-        -- "%[", "%]",
-        -- -- "^",
-        -- "`", "%{", "%|", "%}", "~",
-    -- }
-    -- local url_encodes = {
-        -- "%%20", "%%21", "%%22", "%%23", "%%24",
-        -- -- "%%25",
-        -- "%%26", "%%27", "%%28", "%%29", "%%2A",
-        -- "%%2B", "%%2C", "%%2F", "%%3A", "%%3B",
-        -- "%%3C", "%%3D", "%%3E", "%%3F", "%%40",
-        -- "%%5B", "%%5D",
-        -- -- "%%5E",
-        -- "%%60", "%%7B", "%%7C", "%%7D", "%%7E",
-    -- }
-    -- for i = 1, #forbidden_chars do
-        -- req_text = string.gsub(req_text, forbidden_chars[i], url_encodes[i])
-    -- end
 
     -- create reqest paramater
     local req_params = ""

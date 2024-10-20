@@ -139,6 +139,10 @@ local new = function()
     end
 
     self.write_lines = function(startl, endl, lines)
+        for i = 1, #lines do
+            --末尾に改行があったら、削除する
+            lines[i] = lines[i]:gsub("\r?\n$", "")
+        end
         vim.api.nvim_set_option_value('modifiable', true, { buf = self.bufnr })
         vim.api.nvim_set_option_value('readonly', false, { buf = self.bufnr })
         vim.api.nvim_buf_set_lines(self.bufnr, startl, endl, false, lines)
@@ -287,9 +291,9 @@ local new = function()
             local hlopt = hlopt_table[i]
             -- local require_opts = { "name", "value" }
             -- if _self.validate_table(hlopt, require_opts) == false then
-                -- vim.notify("invalid highlight options. require following keys" .. vim.inspect(require_opts),
-                    -- vim.log.levels.ERROR)
-                -- goto continue
+            -- vim.notify("invalid highlight options. require following keys" .. vim.inspect(require_opts),
+            -- vim.log.levels.ERROR)
+            -- goto continue
             -- end
             vim.api.nvim_set_hl(ns_id, hlopt.name, hlopt.value)
             ::continue::
