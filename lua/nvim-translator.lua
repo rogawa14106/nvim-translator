@@ -13,16 +13,10 @@ local translate = function(text, src, dst)
     ui.new()
 
     -- draw spinner to notify user now wating
-    local spinner = ui.draw_spinner({ "◐ now translating...", "☻ now translating...", "◑ now translating...", "◎ now translating..." }, 1.5)
+    local spinner = ui.draw_spinner({ "◐ now translating.", "☻ now translating..", "◑ now translating...", "◎ now translating" }, 1.5)
 
     -- translate text asynchronously(stop spinner in callback function on_success)
-    local cmd = "curl"
-    local cmd_args = {
-        "-L",
-        translator.URL_TRANSLATOR .. translator.create_req_params(text, src, dst),
-    }
-    local on_exit = function(data)
-        print(data)
+    local on_success = function(data)
         if spinner ~= nil then
             spinner:close()
         end
@@ -33,7 +27,7 @@ local translate = function(text, src, dst)
     local on_err = function(_)--data)
         return nil
     end
-    async.execute_cmd_async(cmd, cmd_args, on_exit, on_err)
+    translator.translate(text, src, dst, on_success, on_err)
 end
 
 -- initialize nvim-translator
@@ -44,7 +38,6 @@ function M.setup(user_config)
     local keymaps = user_config.keymap
 
     for i = 1, #keymaps do
-        print('nvim-translator setup called')
         vim.api.nvim_set_keymap("v", keymaps[i].key, "", {
             callback = function()
                 local text = translator.load_text("visual")
