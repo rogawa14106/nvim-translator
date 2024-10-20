@@ -24,19 +24,24 @@ local translate = function(text, src, dst)
         -- TODO resize window size
         ui.overwrite_lines({ data })
     end
-    local on_err = function(_)--data)
+    local on_err = function(data)
+        if spinner ~= nil then
+            spinner:close()
+            vim.notify("falied to translation\n"..data, vim.log.levels.WARN)
+        end
         return nil
     end
     translator.translate(text, src, dst, on_success, on_err)
 end
 
 -- initialize nvim-translator
----@type fun(user_config: NTConfig): nil
+---@type fun(user_config: NTConfig?): nil
 function M.setup(user_config)
     -- override default nvim-translator configuration
-    -- local config = nt_config.build_config(user_config)
-    local keymaps = user_config.keymap
+    local config = nt_config.build_config(user_config)
+    local keymaps = config.keymap
 
+    -- set keymap
     for i = 1, #keymaps do
         vim.api.nvim_set_keymap("v", keymaps[i].key, "", {
             callback = function()

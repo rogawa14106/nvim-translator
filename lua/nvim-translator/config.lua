@@ -1,8 +1,5 @@
 local M = {}
 
--- import modules
-local ui = require('nvim-translator.ui')
-
 ---nvim-translator configuration type
 ---@class NTConfig
 ---@field keymap NTKeymapConfig[]
@@ -33,14 +30,11 @@ local default_config = {
             key = "<Leader>?",
         },
         {
-            src = "en",
-            dst = "ja",
+            src = "ja",
+            dst = "en",
             key = "<Leader>g?",
         }
     },
-    -- ui = {
-        -- border = ui.border_type.SOLID
-    -- },
 }
 
 ---@type fun(user_config: NTConfig): boolean
@@ -50,25 +44,20 @@ local validate_config = function(user_config)
 end
 
 ---function to build configuration
----@type fun(user_config: NTConfig): nil
+---@type fun(user_config: NTConfig?): NTConfig
 function M.build_config(user_config)
+    -- return default config when user config is nil
+    if user_config == nil then
+        return default_config
+    end
     -- validate user configuration
     local is_valid_config = validate_config(user_config)
-    if is_valid_config ~= true then
-        vim.notify("", vim.log.levels.ERROR)
+    if is_valid_config == false then
+        vim.notify("nvim-translator: invalid user configuration. So, setup on default", vim.log.levels.WARN)
+        return default_config
     end
 
-    -- define configuration of default
-    local config = default_config
-
-    ---for users to override default configurations.
-    if user_config.keymap ~= nil then
-        config.keymap = user_config.keymap
-    end
-    -- if user_config.ui ~= nil then
-        -- config.ui = user_config.ui
-    -- end
-    return config
+    return user_config
 end
 
 return M

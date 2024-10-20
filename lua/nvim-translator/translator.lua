@@ -5,7 +5,8 @@ local async = require('lib.async')
 --- The URL of translate api.
 ---@type string
 M.URL_TRANSLATOR =
-"https://script.google.com/macros/s/AKfycbwazxusB41dZgqxLMuQ1mn6177dGGISodFDv4-yaeKuTr45BaDXqOAupIiceJyBCEs/exec"
+"https://script.google.com/macros/s/AKfycbz3W9G4Jm4GFF_R74CsgsOOQJvDCw2kXIUecRQEx9uHJ56xjH9gLyoVDcsYJ198hjE/exec"
+--v1.0 "https://script.google.com/macros/s/AKfycbwazxusB41dZgqxLMuQ1mn6177dGGISodFDv4-yaeKuTr45BaDXqOAupIiceJyBCEs/exec"
 
 --- Request paramaters of translate api.
 ---@class RequestParamKey
@@ -111,6 +112,7 @@ M.translate = function(text, src, dst, on_success, on_err)
     local cmd = "curl"
     local url = M.URL_TRANSLATOR .. M.create_req_params(text, src, dst)
     local cmd_args = {
+        "-sS",
         "-L",
         url
     }
