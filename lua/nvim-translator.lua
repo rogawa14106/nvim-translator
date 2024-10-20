@@ -13,7 +13,8 @@ local translate = function(text, src, dst)
     ui.new()
 
     -- draw spinner to notify user now wating
-    local spinner = ui.draw_spinner({ "◐ now translating.", "☻ now translating..", "◑ now translating...", "◎ now translating" }, 1.5)
+    local spinner = ui.draw_spinner(
+    { "◐ now translating.", "☻ now translating..", "◑ now translating...", "◎ now translating" }, 1.5)
 
     -- translate text asynchronously(stop spinner in callback function on_success)
     local on_success = function(data)
@@ -27,9 +28,8 @@ local translate = function(text, src, dst)
     local on_err = function(data)
         if spinner ~= nil then
             spinner:close()
-            vim.notify("falied to translation\n"..data, vim.log.levels.WARN)
+            vim.notify("falied to translation\n" .. data, vim.log.levels.WARN)
         end
-        return nil
     end
     translator.translate(text, src, dst, on_success, on_err)
 end
