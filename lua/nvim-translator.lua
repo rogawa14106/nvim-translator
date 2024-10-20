@@ -11,6 +11,7 @@ local ui = require('nvim-translator.ui')
 local translate = function(text, src, dst)
     -- open floating window
     ui.new()
+    vim.cmd('noautocmd normal! gg0')
 
     -- draw spinner to notify user now wating
     local spinner = ui.draw_spinner(
@@ -23,7 +24,8 @@ local translate = function(text, src, dst)
         end
         -- ui.resize()
         -- TODO resize window size
-        ui.overwrite_lines({ data })
+        local formatted_data = translator.format_text(dst, data)
+        ui.overwrite_lines({ formatted_data })
     end
     local on_err = function(data)
         if spinner ~= nil then

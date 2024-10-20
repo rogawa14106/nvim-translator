@@ -162,7 +162,7 @@ TEXT_LEN_LIMIT = 3000
 -- }}}
 --}}}
 
--- text loader {{{
+-- Define Text loader {{{
 -- load text selected on visual mode
 ---@type fun(): string
 local load_visual_text = function()
@@ -196,7 +196,40 @@ M.load_text = function(type)
 end
 -- }}}
 
--- url encoding{{{
+-- Define Text formatter {{{
+-- Format the translated string
+---@param text string
+---@return string @formatted text
+local format_data_ja = function(text)
+    text = string.gsub(text, '。', '。\n')
+    return text
+end
+
+---@param text string
+---@return string @formatted text
+local format_data_en = function(text)
+    return text
+end
+
+local text_formatters = {
+    ['ja'] = format_data_ja,
+    ['en'] = format_data_en,
+}
+---@param language LANG
+---@param text string
+---@return string @formatted text
+M.format_text = function(language, text)
+    local text_formatter = text_formatters[language]
+    if not text_formatter then
+        return text
+    end
+
+    local formatted_data = text_formatter(text)
+    return formatted_data
+end
+-- }}}
+
+-- Define URL encoder {{{
 local char_to_hex = function(c)
     return string.format("%%%02X", string.byte(c))
 end
@@ -212,7 +245,7 @@ local function url_encode(url)
 end
 -- }}}
 
---- Create reqest paramater to hit the translate API{{{
+-- Create reqest paramater to hit the translate API{{{
 ---@type fun(text: string, src: LANG, dst: LANG): string?
 M.create_req_params = function(text, src, dst)
     -- source text must be less than 3000 characters
@@ -236,7 +269,7 @@ M.create_req_params = function(text, src, dst)
 end
 -- }}}
 
---- exec translation{{{
+-- Execute translation{{{
 ---@param text string
 ---@param src LANG
 ---@param dst LANG
