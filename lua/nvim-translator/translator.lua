@@ -271,13 +271,4 @@ M.translate = function(text, src, dst, on_success, on_err)
     async.execute_cmd_async(cmd, cmd_args, on_success, on_err)
 end
 
---debug
-local function debug_fun()
-    local text = "こんにちわ 私はrogawaです"
-    local on_success = function(data) print(data) end
-    local on_err = function(data) print(data) end
-    M.translate(text, "ja", "en", on_success, on_err)
-end
-debug_fun()
-
 return M
