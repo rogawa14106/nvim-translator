@@ -96,7 +96,6 @@ function M.new()
     }
 
     float_window.init(config)
-    print("ui:new:bufnr:", float_window.bufnr)
 end
 
 ---@type fun(lines: string[]):nil
