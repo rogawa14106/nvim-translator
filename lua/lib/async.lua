@@ -39,7 +39,6 @@ M.execute_cmd_async = function(cmd, cmd_args, on_cmd_success, on_cmd_err)
     -- read stdout
     luv.read_start(stdout_pipe, vim.schedule_wrap(function(_, data) -- status, data
         if data then
-            -- print(data)
             if on_success ~= nil then
                 luv.async_send(on_success, data)
             end
