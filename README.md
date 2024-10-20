@@ -1,6 +1,6 @@
 # Requirements
 * dependencies  
-curl -- Required to hit the API  
+curl or wget -- Required to hit the API  
 
 * Supported versions  
 Neovim only.  
@@ -11,13 +11,13 @@ nvim-translator is a language translation tool with asynchronous implementation.
 and pritty load spinner.  
 
 # Installation
-* vim-plug
+* vim-plug  
 
 ``` vim
 Plug 'rogawa14106/nvim-translator'
 ```
 
-* Lazy
+* Lazy  
 
 ``` lua
 return {
@@ -25,7 +25,7 @@ return {
 }
 ```
 
-* Packer
+* Packer  
 
 ``` lua
 use {
@@ -38,11 +38,11 @@ use {
 2. Press configured keymap
 
 ## default keymap
-* <Leader>? visual-mode  
-selected English texts translate to Japanese.  
+* Press <Leader>? on visual mode  
+Selected English texts translate to Japanese.  
 
-* <Leader>g? visual-mode  
-selected Japanese texts translate to English.  
+* Press <Leader>g? on visual mode  
+Selected Japanese texts translate to English.  
 
 ## user configuration
 
@@ -62,7 +62,7 @@ require('nvim-translator')setup({
 ```
 
 # TODO (Features planned to be implemented in the future)
-* Avoid relying on curl  
-* Ability to view translation history  
 * Timeout when translation fails
+* Avoid relying on curl/wget  
+* Ability to view translation history  
 
