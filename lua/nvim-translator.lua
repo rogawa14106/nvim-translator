@@ -3,7 +3,6 @@ local M = {}
 -- import modules
 local nt_config = require('nvim-translator.config')
 local translator = require('nvim-translator.translator')
-local async = require('lib.async')
 local ui = require('nvim-translator.ui')
 
 ---@param src LANG
