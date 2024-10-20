@@ -37,14 +37,15 @@ use {
 1. select text on visual mode  
 2. Press configured keymap
 
-## default keymap
-* Press <Leader>? on visual mode  
+# keymap
+## default
+* Press \<Leader\>? on visual mode  
 Selected English texts translate to Japanese.  
 
-* Press <Leader>g? on visual mode  
+* Press \<Leader\>g? on visual mode  
 Selected Japanese texts translate to English.  
 
-## user configuration
+## user setting
 
 ``` lua
 require('nvim-translator')setup({
@@ -61,7 +62,8 @@ require('nvim-translator')setup({
 })
 ```
 
-# TODO (Features planned to be implemented in the future)
+# TODO
+## Features planned to be implemented in the future)
 * Timeout when translation fails
 * Avoid relying on curl/wget  
 * Ability to view translation history  
