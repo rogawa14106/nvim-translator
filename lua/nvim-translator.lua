@@ -22,10 +22,10 @@ local translate = function(text, src, dst)
         if spinner ~= nil then
             spinner:close()
         end
-        -- ui.resize()
         -- TODO resize window size
+        -- ui.resize()
         local formatted_data = translator.format_text(dst, data)
-        ui.overwrite_lines({ formatted_data })
+        ui.overwrite_lines(formatted_data)
     end
     local on_err = function(data)
         if spinner ~= nil then

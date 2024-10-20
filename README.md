@@ -15,13 +15,19 @@ and pritty load spinner.
 
 ``` vim
 Plug 'rogawa14106/nvim-translator'
+lua << EOF
+    require('nvim-translator').setup()
+EOF
 ```
 
 * Lazy  
 
 ``` lua
 return {
-    'rogawa14106/nvim-translator'
+    'rogawa14106/nvim-translator',
+    config = function()
+        require('nvim-translator').setup()
+    end,
 }
 ```
 
@@ -29,7 +35,10 @@ return {
 
 ``` lua
 use {
-    'rogawa14106/nvim-translator'
+    'rogawa14106/nvim-translator',
+    config = function()
+        require('nvim-translator').setup()
+    end,
 }
 ```
 

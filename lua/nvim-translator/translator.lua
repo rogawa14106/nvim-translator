@@ -198,17 +198,23 @@ end
 
 -- Define Text formatter {{{
 -- Format the translated string
----@param text string
----@return string @formatted text
+
+---@param text string @translated text
+---@return string[] @formatted text list
 local format_data_ja = function(text)
-    text = string.gsub(text, '。', '。\n')
-    return text
+    -- split text from 。
+    local line_breaker = "。"
+    local formatted_text = vim.fn.split(text, line_breaker .. '\\zs')
+    return formatted_text
 end
 
----@param text string
----@return string @formatted text
+---@param text string @translated text
+---@return string[] @formatted text
 local format_data_en = function(text)
-    return text
+    -- local line_breaker = "\\."
+    -- local formatted_text = vim.fn.split(text, line_breaker .. '\\zs')
+    local formatted_text = {text}
+    return formatted_text
 end
 
 local text_formatters = {
@@ -217,11 +223,11 @@ local text_formatters = {
 }
 ---@param language LANG
 ---@param text string
----@return string @formatted text
+---@return string[] @formatted text
 M.format_text = function(language, text)
     local text_formatter = text_formatters[language]
     if not text_formatter then
-        return text
+        return {text}
     end
 
     local formatted_data = text_formatter(text)
