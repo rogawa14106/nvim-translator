@@ -6,36 +6,39 @@
 ---@field keymaps FwinKeymapConfig[]
 ---@field autocmd FwinAutocmdConfig[]
 ---@field initial_lines string[]? initial text lines
----window config
+
+---floating window configuration
 ---@alias FWinWindowConfig vim.api.keyset.win_config
----
----options config
+
+---options configuration
 ---@class FwinOptionConfig
 ---@field win FwinOptionTable[]
 ---@field buf FwinOptionTable[]
 ---@field hl FwinHlOptionTable[]
----
+
+---window/buffer options set on floating window
 ---@class FwinOptionTable
 ---@field name string name of option
 ---@field value string|integer|table|boolean value of option
----
+
+---syntax highlighting configuration set on floating window
 ---@class FwinHlOptionTable
 ---@field name string name of option
 ---@field value vim.api.keyset.highlight value of highlihght option
 ---
----keymap config
+---keymap configuration set on floating window
 ---@class FwinKeymapConfig
 ---@field is_buf boolean
----@field mode "n"|"i"|"c"|"v"|"V"|"r"|"R"|"t" TODO add ritelal type
----@field lhs string
----@field rhs string
----@field opts table TODO add strict type
+---@field mode string Mode short-name ("n", "i", "v", ...)
+---@field lhs string — Left-hand-side `{lhs}` of the mapping.
+---@field rhs string — Right-hand-side `{rhs}` of the mapping.
+---@field opts table vim.api.keyset.keymap Optional parameters map: Accepts all `:map-arguments` as keys except [<buffer>], values are booleans (default false).
 
 ---autocmd config
 ---@class FwinAutocmdConfig
 ---@field is_buf boolean
----@field event string[] TODO add ritelal type like "CursorMoved"|"VimEnter"
----@field opts table TODO add strict type
+---@field event string|string[] Event(s) that will trigger the handler
+---@field opts table vim.api.keyset.create_autocmd
 
 ---floating window type
 ---@class FloatWindow
@@ -61,6 +64,7 @@ local new = function()
         --         buflines = {},
         --         bufinfos = {},
         -- member methods
+
         init = function() end,
         create_buf = function() end,
         open_win = function() end,
@@ -170,7 +174,6 @@ local new = function()
             return
         end
 
-        -- TODO too nested
         for i = 1, #keymap_table do
             local keymap = keymap_table[i]
             -- local require_opts = { "is_buf", "mode", "lhs", "rhs" }
