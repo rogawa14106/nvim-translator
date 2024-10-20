@@ -11,6 +11,7 @@ local ui = require('nvim-translator.ui')
 local translate = function(text, src, dst)
     -- open floating window
     ui.new()
+    -- move to top line of floating window.
     vim.cmd('noautocmd normal! gg0')
 
     -- draw spinner to notify user now wating
