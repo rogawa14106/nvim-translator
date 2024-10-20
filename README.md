@@ -1,7 +1,8 @@
 # Requirements
 * dependencies  
-curl -- to hit translation API
-* version  
+curl -- Required to hit the API  
+
+* Supported versions  
 Neovim only.  
 Neovim version >= 0.9.0  
 
@@ -60,9 +61,8 @@ require('nvim-translator')setup({
 })
 ```
 
-# TODO (features that implement not yet)
+# TODO (Features planned to be implemented in the future)
 * Avoid relying on curl  
-* history(map <Leader>H)  
-* translate ja -> en (may be gas side bug)  
-* timeout  
+* Ability to view translation history  
+* Timeout when translation fails
 
