@@ -15,11 +15,6 @@ local M = {}
 --@class NTUIConfig
 --@field border BORDER_TYPE
 
----@alias LANG @string literal to specify translate language
----| "ja" japanese
----| "en" english
-
-
 ---default configuration of nvim-translator
 ---@type NTConfig
 local default_config = {
@@ -37,10 +32,27 @@ local default_config = {
     },
 }
 
----@type fun(user_config: NTConfig): boolean
+---@param user_config NTConfig
+---@return boolean is_valid
+---@return string err
 local validate_config = function(user_config)
-    -- TODO impl validation
-    return true
+    local is_valid = true
+    local err = "nvim-translator: invalid userconfig."
+
+    -- check keymap configuration
+    for i = 1, #user_config.keymap do
+        if user_config.keymap[i] == nil then
+            is_valid = false
+            err = err .. " nil value not allowed on keymap configuration."
+            break
+        end
+    end
+
+    if is_valid == true then
+        return true, ""
+    else
+        return false, err
+    end
 end
 
 ---function to build configuration
@@ -51,9 +63,9 @@ function M.build_config(user_config)
         return default_config
     end
     -- validate user configuration
-    local is_valid_config = validate_config(user_config)
+    local is_valid_config, err = validate_config(user_config)
     if is_valid_config == false then
-        vim.notify("nvim-translator: invalid user configuration. So, setup on default", vim.log.levels.WARN)
+        vim.notify(err, vim.log.levels.WARN)
         return default_config
     end
 
