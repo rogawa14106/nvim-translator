@@ -5,6 +5,7 @@ local nt_config = require('nvim-translator.config')
 local translator = require('nvim-translator.translator')
 local ui = require('nvim-translator.ui')
 
+---@param text string
 ---@param src LANG
 ---@param dst LANG
 local translate = function(text, src, dst)
@@ -33,8 +34,20 @@ local translate = function(text, src, dst)
     translator.translate(text, src, dst, on_success, on_err)
 end
 
--- initialize nvim-translator
----@type fun(user_config: NTConfig?): nil
+-- usage
+-- ``` lua
+-- require('nvim-translator').setup({
+--     keymap = {
+--        {
+--            src = "en",
+--            dst = "ja",
+--            key = "<Leader>?",
+--        },
+--        -- ...add custom keymaps
+--     }
+-- })
+-- ```
+---@param user_config NTConfig?
 function M.setup(user_config)
     -- override default nvim-translator configuration
     local config = nt_config.build_config(user_config)

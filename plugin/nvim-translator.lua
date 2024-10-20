@@ -3,7 +3,7 @@ if vim.g.loaded_nvim_translator then
     return
 end
 vim.g.loaded_nvim_translator = true
---テスト
+
 -- nvim check
 if vim.fn.has('nvim') ~= 1 then
     vim.notify("this plugin only support nvim.", vim.log.levels.ERROR)
@@ -13,7 +13,6 @@ end
 -- nvim version check (support >= nvim 0.10.0)
 ---@type (vim.Version)?
 local nvim_local_v = vim.version.parse(vim.fn.system({ 'nvim', '-v' }), { strict = false })
----@type number[]
 local nvim_support_v = { 0, 9, 0 }
 if (nvim_local_v ~= nil) and (vim.version.lt(nvim_local_v, nvim_support_v)) then
     vim.notify(
@@ -25,7 +24,4 @@ if (nvim_local_v ~= nil) and (vim.version.lt(nvim_local_v, nvim_support_v)) then
 end
 
 -- on dev env
-vim.cmd("set runtimepath+=~/work/01_dev/nvim_plugin/nvim-translator")
-
----initialize nvim-translator on default config
-require("nvim-translator").setup()
+-- vim.cmd("set runtimepath+=~/work/01_dev/nvim_plugin/nvim-translator")
