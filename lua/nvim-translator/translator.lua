@@ -53,7 +53,6 @@ local text_loaders = {
 M.load_text = function(type)
     local text_loader = text_loaders[type]
     local text = text_loader()
-    print(text)
     return text
 end
 -- }}}
@@ -103,24 +102,19 @@ M.create_req_params = function(text, src, dst)
 end
 -- }}}
 
--- sumple
-M.translate = function(text, src, dst)
+---@param text string
+---@param src LANG
+---@param dst LANG
+---@param on_success function
+---@param on_err function
+M.translate = function(text, src, dst, on_success, on_err)
     local cmd = "curl"
     local url = M.URL_TRANSLATOR .. M.create_req_params(text, src, dst)
     local cmd_args = {
         "-L",
         url
     }
-    local on_exit = function(data)
-        print(data)
-        --timer.close()
-    end
-    local on_err = function(data)
-        --timer.close()
-        return
-    end
-
-    async.execute_cmd_async(cmd, cmd_args, on_exit, on_err)
+    async.execute_cmd_async(cmd, cmd_args, on_success, on_err)
 end
 
 return M
