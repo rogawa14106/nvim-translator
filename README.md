@@ -1,6 +1,6 @@
 # Requirements
 * dependencies  
-curl or wget -- Required to hit the API  
+curl or wget -- Required to hit the translate API  
 
 * Supported versions  
 Neovim only.  
@@ -73,7 +73,8 @@ require('nvim-translator')setup({
 
 # TODO
 ## Features planned to be implemented in the future)
-* Timeout when translation fails
-* Avoid relying on curl/wget  
-* Ability to view translation history  
+* Ability to display the untranslated text side by side.  
+* Timeout when translation fails.  
+* Avoid relying on curl/wget.  
+* Ability to view translation history.  
 
