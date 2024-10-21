@@ -204,7 +204,7 @@ end
 local format_data_ja = function(text)
     -- split text from 。
     local line_breaker = "。"
-    local formatted_text = vim.fn.split(text, line_breaker .. '\\s\\+\\zs')
+    local formatted_text = vim.fn.split(text, line_breaker .. '\\s*\\zs')
     -- local formatted_text = vim.fn.split(text, line_breaker)
     return formatted_text
 end
@@ -213,7 +213,7 @@ end
 ---@return string[] @formatted text
 local format_data_en = function(text)
     local line_breaker = "\\."
-    local formatted_text = vim.fn.split(text, line_breaker .. '\\s\\+\\zs')
+    local formatted_text = vim.fn.split(text, line_breaker .. '\\s*\\zs')
     return formatted_text
 end
 
