@@ -1,0 +1,48 @@
+*nvim-translator*  Asyncronous translator for Neovim.
+
+Minimum version of neovim: v0.9.0
+
+==============================================================================
+QUICK START                                       *nvim-translator-quickstart*
+
+Following line is the minimal setup.
+>
+  require('nvim-translator').setup ()
+<
+If you don't pass any settings to setup function,
+Default keymaps are provided. See |nvim-translator-default-keymaps|.
+
+==============================================================================
+KEYMAPS                                              *nvim-translator-keymaps*
+
+Note: Configuable keymap only works on visual mode.
+
+Default keymaps ~
+					     *nvim-translator-default-keymaps*
+<Leader>?       Translate Japanese text selected on visual mode to English.
+<Leader>g?      Translate English text selected on visual mode to Japanese.
+
+Configuration ~
+				       *nvim-translator-keymaps-configuration*
+If you need to customize keymap, add keymap configurations as below.
+Then, default keymaps are not attached.
+>
+  require('nvim-translator').setup ({
+    -- A list of keymaps to launch translator
+    keymap = {
+      { src = "en", dst = "ja", key = "<Space>?" },
+      -- Add keymaps here
+    }
+  })
+
+options:
+  - src: Translation source language
+  - dst: Translation destination language
+  - key: Key string to launch translator
+
+==============================================================================
+COMMANDS                                            *nvim-translator-commands*
+
+Commands don't provided not yet.
+
+vim:tw=78:ts=8:noet:ft=help:norl:
