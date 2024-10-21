@@ -10,6 +10,10 @@ Neovim version >= 0.9.0
 nvim-translator is a language translation tool with asynchronous implementation.  
 and pritty load spinner.  
 
+
+https://github.com/user-attachments/assets/57feaed5-6830-457e-bb58-9c9504dc39ea
+
+
 # Installation
 * vim-plug  
 
