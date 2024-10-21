@@ -201,7 +201,7 @@ end
 
 ---@param text string @translated text
 ---@return string[] @formatted text list
-local format_data_ja = function(text)
+local format_text_ja = function(text)
     -- split text from 。
     local line_breaker = "。"
     local formatted_text = vim.fn.split(text, line_breaker .. '\\s*\\zs')
@@ -211,25 +211,31 @@ end
 
 ---@param text string @translated text
 ---@return string[] @formatted text
-local format_data_en = function(text)
+local format_text_en = function(text)
     local line_breaker = "\\."
     local formatted_text = vim.fn.split(text, line_breaker .. '\\s*\\zs')
     return formatted_text
 end
 
 local text_formatters = {
-    ['ja'] = format_data_ja,
-    ['en'] = format_data_en,
+    ['ja'] = format_text_ja,
+    ['en'] = format_text_en,
 }
 ---@param language LANG
 ---@param text string
 ---@return string[] @formatted text
 M.format_text = function(language, text)
+    -- common format process
+    -- remove continurous white spaces
+    text = string.gsub(text, '%s+', ' ')
+
+    -- if unique formatter is found, return formatted text.
     local text_formatter = text_formatters[language]
     if not text_formatter then
         return {text}
     end
 
+    -- if no unique formatter is found, return as is.
     local formatted_data = text_formatter(text)
     return formatted_data
 end
