@@ -119,7 +119,7 @@ function M.draw_spinner(spin_chars, spin_interval)
         local uv = vim.loop
         spinner = uv.new_timer()
         local cb = vim.schedule_wrap(function()
-            if (#vim.fn.win_findbuf(float_window.bufnr) < 1) and (spinner ~= nil) then
+            if (#vim.fn.win_findbuf(float_window.bufnr) < 1) and (spinner ~= nil) and (not uv.is_closing(spinner)) then
                 spinner:close()
             end
             M.overwrite_lines({ spin_chars[spin_cnt % #spin_chars + 1] })

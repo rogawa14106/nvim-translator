@@ -16,11 +16,11 @@ local translate = function(text, src, dst)
 
     -- draw spinner to notify user now wating
     local spinner = ui.draw_spinner(
-    { "◐ now translating.", "☻ now translating..", "◑ now translating...", "◎ now translating" }, 1.5)
+        { "◐ now translating.", "☻ now translating..", "◑ now translating...", "◎ now translating" }, 1.5)
 
     -- translate text asynchronously(stop spinner in callback function on_success)
     local on_success = function(data)
-        if spinner ~= nil then
+        if spinner and (not vim.loop.is_closing(spinner)) then
             spinner:close()
         end
         -- TODO resize window size
@@ -29,7 +29,7 @@ local translate = function(text, src, dst)
         ui.overwrite_lines(formatted_data)
     end
     local on_err = function(data)
-        if spinner ~= nil then
+        if spinner and (not vim.loop.is_closing(spinner)) then
             spinner:close()
             vim.notify("falied to translation\n" .. data, vim.log.levels.WARN)
         end
