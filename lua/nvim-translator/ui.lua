@@ -69,20 +69,20 @@ function M.new()
         buf = {
         },
         hl = {
-            {
-                name = "NormalFloat",
-                value = {
-                    fg = "#fefefe",
-                    bg = "#343934",
-                }
-            },
-            {
-                name = "FloatBorder",
-                value = {
-                    fg = "#fefefe",
-                    bg = "none",
-                }
-            },
+            -- {
+            -- name = "NormalFloat",
+            -- value = {
+            -- fg = "#fefefe",
+            -- bg = "#343934",
+            -- }
+            -- },
+            -- {
+            -- name = "FloatBorder",
+            -- value = {
+            -- fg = "#fefefe",
+            -- bg = "none",
+            -- }
+            -- },
         },
     }
 
